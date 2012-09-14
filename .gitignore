@@ -8,7 +8,6 @@ dist
 build
 eggs
 parts
-bin
 var
 sdist
 develop-eggs
@@ -20,7 +19,7 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
-_temp_trial
+_trial_temp
 
 #Translations
 *.mo
