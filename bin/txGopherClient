@@ -1,20 +1,44 @@
 #!/usr/bin/env python2.7
 from twisted.internet import reactor
 from twisted.internet.endpoints import TCP4ClientEndpoint
-from twisted.python import usage
+from twisted.python import log, usage
 
-from txgopher import client
+from txgopher import client, const, utils
 
 
 class ClientOptions(usage.Options):
     """
     """
+    optParameters = [
+        ["url", "u", const.defaultURL, "a gopherspace URL"],
+        ["port", "p", const.port, "a gopher server's port"],
+        ["selector", "s", None, "a gopher selector (path)"],
+        ["host", "h", None, "a gopher host"],
+    ]
+
 
 def gotProtocol(protocol):
     """
     """
+    print protocol
 
-endpoint = TCP4ClientEndpoint(reactor, host, port)
-d = endpoint.connect(client.GopherClientFactory())
-d.addCallback(gotProtocol)
-reactor.run()
+
+def main():
+    options = ClientOptions()
+    options.parseOptions()
+    url = options["url"]
+    if url:
+        selector, host, port = utils.getClientParams(url)
+    else:
+        selector = options["selector"]
+        host = options["host"]
+        port = options["port"]
+    endpoint = TCP4ClientEndpoint(reactor, host, port)
+    factory = client.GopherClientFactory(selector)
+    d = endpoint.connect(factory)
+    d.addErrback(log.msg)
+    d.addCallback(gotProtocol)
+    reactor.run()
+
+
+main()
