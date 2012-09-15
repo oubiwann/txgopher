@@ -1,0 +1,11 @@
+#!/usr/bin/env python2.7
+from twisted.application import internet, service
+
+from txgopher import client
+
+
+port = 70
+factory = client.GopherClientFactory()
+application = service.Application("txGopher Client")
+gopherService = internet.TCPServer(port, factory)
+gopherService.setServiceParent(application)
