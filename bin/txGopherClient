@@ -15,6 +15,6 @@ def gotProtocol(protocol):
     """
 
 endpoint = TCP4ClientEndpoint(reactor, host, port)
-d = endpoint.connect(client.GopherFactory())
+d = endpoint.connect(client.GopherClientFactory())
 d.addCallback(gotProtocol)
 reactor.run()
