@@ -81,3 +81,15 @@ class GopherItemTypes(object):
 class GopherPlusItemTypes(GopherItemTypes):
     """
     """
+
+
+class GopherComprehensiveItemTypes(GopherPlusItemTypes):
+    """
+    """
+    map = GopherItemTypes.map
+    map.update({
+        "disconnect": const.DISCONNECT,
+        "html": const.HTML,
+        "information": const.INFO,
+        "sound": const.SOUND,
+    })
