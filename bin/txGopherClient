@@ -9,6 +9,9 @@ from txgopher import client, const, utils
 class ClientOptions(usage.Options):
     """
     """
+    optFlags = [
+        ["debug", "d", "run in debug mode"],
+    ]
     optParameters = [
         ["url", "u", const.defaultURL, "a gopherspace URL"],
         ["port", "p", const.port, "a gopher server's port"],
@@ -27,6 +30,7 @@ def main():
     options = ClientOptions()
     options.parseOptions()
     url = options["url"]
+    debug = bool(options["debug"])
     if url:
         selector, host, port = utils.getClientParams(url)
     else:
@@ -34,7 +38,7 @@ def main():
         host = options["host"]
         port = options["port"]
     endpoint = TCP4ClientEndpoint(reactor, host, port)
-    factory = client.GopherClientFactory(selector)
+    factory = client.GopherClientFactory(host, selector, debug)
     d = endpoint.connect(factory)
     d.addErrback(log.msg)
     d.addCallback(gotProtocol)
