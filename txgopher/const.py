@@ -1,10 +1,11 @@
-port = 70
 pageWidth = 67
 hostPortSeparator = ":"
 selectorSeparator = "/"
 fieldSeparator = "\t"
 scheme = "gopher"
-defaultURL = "%s://sdf.lonestar.org/" % scheme
+defaultHost = "sdf.lonestar.org"
+defaultPort = 70
+defaultURL = "%s://%s/" % (scheme, defaultHost)
 banner = r"""
 
  |         __|          |
@@ -36,3 +37,6 @@ JSON = "j"
 FILES = [FILE, BINHEX, DOSBIN, UUENCODE, BIN, GIF, IMG, HTML, SOUND, JSON]
 RESOURCES = FILES + [DIR, SEARCH]
 ALL_ITEMS = RESOURCES + [CCSO, ERR, TELNET, DUP, TN3270, DISCONNECT, INFO]
+
+
+defaultItem = DIR
