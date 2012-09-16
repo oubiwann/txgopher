@@ -20,7 +20,7 @@ class ClientOptions(usage.Options):
 def gotProtocol(protocol):
     """
     """
-    print protocol
+    print client.welcome()
 
 
 def main():

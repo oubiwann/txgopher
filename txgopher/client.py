@@ -2,6 +2,14 @@ from twisted.internet import reactor
 from twisted.internet.protocol import Factory
 from twisted.protocols.basic import LineReceiver
 
+from txgopher import const
+
+
+def welcome(additionalText=""):
+    if not additionalText:
+        additionalText = "A client for gopherspace.\n"
+    return "%s\n%s" % (const.banner, additionalText)
+
 
 class GopherClient(LineReceiver):
     """
