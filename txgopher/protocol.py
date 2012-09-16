@@ -15,6 +15,14 @@ class GopherItemTypes(object):
     together along with extended file information. BinHexed files take up more
     space than the original files, but will not be corrupted by non-"8-bit
     clean" software.
+
+    Telnet 3270, or TN3270 describes either the process of sending and
+    receiving data streams of the IBM 3270 block-oriented terminals using the
+    Telnet protocol or the software that emulates a 3270 class terminal that
+    communicates using that process. TN3270 allows a 3270 terminal emulator to
+    communicate over a TCP/IP network instead of an SNA network. (Standard
+    telnet clients cannot be used as a substitute for TN3270 clients, as they
+    use fundamentally different techniques for exchanging data.)
     """
     map = {
         "file": 0,
@@ -32,6 +40,7 @@ class GopherItemTypes(object):
         "telnetSession": 8,
         "binaryFile": 9,
         "redundantServer": "+",
+        # see docstring
         "tn3270Session": "T",
         "gif": "g",
         "image": "I",
@@ -44,7 +53,6 @@ class GopherItemTypes(object):
             return super(GopherItemTypes, self).__getattribute__(name)
         except AttributeError:
             value = self.get(name)
-            #import pdb;pdb.set_trace()
             if value is not None:
                 return value
             else:
