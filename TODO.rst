@@ -3,9 +3,11 @@ Spec Implementation / Bug Fixes
 
  * add support for error pages and parsing them effectively
 
- * add tests for utils.getClientParams (maybe rename function?)
-
  * add more tests in test_protocol
+
+ * find out about search params for gopher (item type 7) and if these can be
+   passed in a URL
+
 
 Featues
 -------
