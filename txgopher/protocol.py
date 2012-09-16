@@ -86,7 +86,7 @@ class GopherPlusItemTypes(GopherItemTypes):
 class GopherComprehensiveItemTypes(GopherPlusItemTypes):
     """
     """
-    map = GopherItemTypes.map
+    map = GopherPlusItemTypes.map
     map.update({
         "disconnect": const.DISCONNECT,
         "html": const.HTML,
@@ -95,7 +95,16 @@ class GopherComprehensiveItemTypes(GopherPlusItemTypes):
     })
 
 
-class GopherLineProtocol(object):
+class TXGopherItemTypes(GopherComprehensiveItemTypes):
+    """
+    """
+    map = GopherComprehensiveItemTypes.map
+    map.update({
+        "json": const.JSON
+    })
+
+
+class GopherMapProtocol(object):
     """
     """
     def __init__(self, host, line):
@@ -106,15 +115,20 @@ class GopherLineProtocol(object):
         self.itemhost = ""
         self.port = ""
         self.error = ""
+        self.url = ""
         self.parseLine(line)
 
     def parseLine(self, line):
+        if not line:
+            return
         self.type = line[0]
         self.typeName = GopherComprehensiveItemTypes().get(self.type)
         if self.type == const.DISCONNECT:
             return
         self.display, self.selector, self.itemhost, self.port = line[1:].split(
             const.fieldSeparator)
+        self.url = "%s://%s/%s%s" % (
+            const.scheme, self.itemhost, self.type, self.selector)
 
     def __repr__(self):
         repr = "<%s type='%s'" % (self.__class__.__name__, self.typeName)
