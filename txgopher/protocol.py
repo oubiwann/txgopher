@@ -1,3 +1,6 @@
+from txgopher import const
+
+
 class GopherItemTypes(object):
     """
     Historical notes:
@@ -16,6 +19,11 @@ class GopherItemTypes(object):
     space than the original files, but will not be corrupted by non-"8-bit
     clean" software.
 
+    Redundant server applies to a duplicated server. The information contained
+    within is a duplicate of the primary server. The primary server is defined
+    as the last DirEntity that is has a non-plus "Type" field. The client
+    should use the transaction as defined by the primary server Type field.
+
     Telnet 3270, or TN3270 describes either the process of sending and
     receiving data streams of the IBM 3270 block-oriented terminals using the
     Telnet protocol or the software that emulates a 3270 class terminal that
@@ -25,28 +33,30 @@ class GopherItemTypes(object):
     use fundamentally different techniques for exchanging data.)
     """
     map = {
-        "file": 0,
-        "directory": 1,
+        "file": const.FILE,
+        "directory": const.DIR,
         # see docstring
-        "ccsoNameServer": 2,
-        "error": 3,
+        "ccsoNameServer": const.CCSO,
+        "error": const.ERR,
         # see docstring
-        "binHex": 4,
+        "binHex": const.BINHEX,
         # DOS binary archive of some sort
-        "dosBin": 5,
+        "dosBin": const.DOSBIN,
         # a UNIX uuencoded file
-        "uuencode": 6,
-        "searchServer": 7,
-        "telnetSession": 8,
-        "binaryFile": 9,
-        "redundantServer": "+",
+        "uuencode": const.UUENCODE,
+        "searchServer": const.SEARCH,
+        "telnetSession": const.TELNET,
+        "binaryFile": const.BIN,
         # see docstring
-        "tn3270Session": "T",
-        "gif": "g",
-        "image": "I",
+        "redundantServer": const.DUP,
+        # see docstring
+        "tn3270Session": const.TN3270,
+        "gif": const.GIF,
+        "image": const.IMG,
     }
 
-    lookup = dict([(val, key) for key, val in map.items()])
+    def __init__(self):
+        self.lookup = dict([(val, key) for key, val in self.map.items()])
 
     def __getattribute__(self, name):
         try:
@@ -59,6 +69,7 @@ class GopherItemTypes(object):
                 raise AttributeError()
 
     def get(self, value):
+        value = str(value)
         if value in self.map.keys():
             return self.map[value]
         elif value in self.map.values():
