@@ -35,21 +35,28 @@ class GopherItemTypes(object):
         "tn3270Session": "T",
         "gif": "g",
         "image": "I",
+    }
 
-    def __getattr__(self, name):
-        value = self.map.get(name)
-        if value:
-            return value
-        else:
-            return super(GopherItemTypes, self).__getattr__(name)
+    lookup = dict([(val, key) for key, val in map.items()])
+
+    def __getattribute__(self, name):
+        try:
+            return super(GopherItemTypes, self).__getattribute__(name)
+        except AttributeError:
+            value = self.get(name)
+            #import pdb;pdb.set_trace()
+            if value is not None:
+                return value
+            else:
+                raise AttributeError()
 
     def get(self, value):
         if value in self.map.keys():
             return self.map[value]
         elif value in self.map.values():
-            for key, val in self.map.items():
-                if val == value:
-                    return key
+            return self.lookup[value]
+        else:
+            return None
 
 
 class GopherPlusItemTypes(GopherItemTypes):
