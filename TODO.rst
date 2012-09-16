@@ -1,11 +1,23 @@
-Write a getPage utility.
+Spec Implementation / Bug Fixes
+-------------------------------
 
-Write a gopher spider... or tunneler... or burrower.
+ * add support for error pages and parsing them effectively
 
-Full text search on a gopher server with Solr?
+ * add tests for utils.getClientParams (maybe rename function?)
 
-MongoDB and full text search in a gopher server?
+ * add more tests in test_protocol
 
-Serving JSON... the overhead on the gopher server is so low, it'd be ideal...
+Featues
+-------
 
-Read remote gopher files... get a file handle, read data, etc.
+ * Write a getPage utility.
+
+ * Write a gopher spider... or tunneler... or burrower.
+
+ * Full text search on a gopher server with Solr?
+
+ * MongoDB and full text search in a gopher server?
+
+ * Serving JSON... the overhead on the gopher server is so low, it'd be ideal...
+
+ * Read remote gopher files... get a file handle, read data, etc.
