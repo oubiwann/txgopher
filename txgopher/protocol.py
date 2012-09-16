@@ -93,3 +93,36 @@ class GopherComprehensiveItemTypes(GopherPlusItemTypes):
         "information": const.INFO,
         "sound": const.SOUND,
     })
+
+
+class GopherLineProtocol(object):
+    """
+    """
+    def __init__(self, host, line):
+        self.host = host
+        self.type = ""
+        self.display = ""
+        self.selector = ""
+        self.itemhost = ""
+        self.port = ""
+        self.error = ""
+        self.parseLine(line)
+
+    def parseLine(self, line):
+        self.type = line[0]
+        self.typeName = GopherComprehensiveItemTypes().get(self.type)
+        if self.type == const.DISCONNECT:
+            return
+        self.display, self.selector, self.itemhost, self.port = line[1:].split(
+            const.fieldSeparator)
+
+    def __repr__(self):
+        repr = "<%s type='%s'" % (self.__class__.__name__, self.typeName)
+        if self.type != const.DISCONNECT:
+            repr += ", data='%s'" % self.display
+        if self.type == const.DIR:
+            repr += " selector='%s'" % self.selector
+        if (self.type not in [const.DISCONNECT, const.INFO]
+            and self.itemhost != self.host):
+            repr += " host='%s'" % self.itemhost
+        return repr + ">"
