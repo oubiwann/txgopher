@@ -11,19 +11,23 @@ class ClientOptions(usage.Options):
     """
     optFlags = [
         ["debug", "d", "run in debug mode"],
+        ["no-banner", "b", "run without the banner"],
     ]
     optParameters = [
         ["url", "u", const.defaultURL, "a gopherspace URL"],
-        ["port", "p", const.port, "a gopher server's port"],
-        ["selector", "s", None, "a gopher selector (path)"],
         ["host", "h", None, "a gopher host"],
+        ["port", "p", const.port, "a gopher server's port"],
+        ["type", "t", const.DIR, "a gopher item type"],
+        ["selector", "s", None, "a gopher selector (path)"],
     ]
 
 
 def gotProtocol(protocol):
     """
     """
-    print client.welcome()
+    banner = protocol.getBanner()
+    if banner:
+        print banner
 
 
 def main():
@@ -31,14 +35,17 @@ def main():
     options.parseOptions()
     url = options["url"]
     debug = bool(options["debug"])
+    withBanner = not bool(options["no-banner"])
     if url:
-        selector, host, port = utils.getClientParams(url)
+        type, selector, host, port = utils.getClientParams(url)
     else:
+        type = options["type"]
         selector = options["selector"]
         host = options["host"]
         port = options["port"]
     endpoint = TCP4ClientEndpoint(reactor, host, port)
-    factory = client.GopherClientFactory(host, selector, debug)
+    factory = client.GopherClientFactory(
+        host, type, selector, debug, withBanner)
     d = endpoint.connect(factory)
     d.addErrback(log.msg)
     d.addCallback(gotProtocol)
