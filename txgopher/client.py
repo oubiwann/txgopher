@@ -8,9 +8,8 @@ from txgopher import const, protocol
 class GopherClient(LineReceiver):
     """
     """
-    def __init__(self, selector, debug=False):
-        self.selector = selector
-        self.debug = debug
+    def __init__(self, factory):
+        self.factory = factory
 
     def getBanner(self, additionalText=""):
         if not self.factory.withBanner:
@@ -23,7 +22,7 @@ class GopherClient(LineReceiver):
 
     def sendCommand(self, selector="", query=""):
         if not selector:
-            selector = self.selector
+            selector = self.factory.selector
         command = selector
         if query:
             command = "%s\t%s" % (command, query)
@@ -59,7 +58,7 @@ class GopherClient(LineReceiver):
     def connectionMade(self):
         if self.factory.debug:
             print "Connection made to %s." % self.factory.host
-        args = [self.selector]
+        args = [self.factory.selector]
         if self.factory.type == const.SEARCH:
             args.append(self.factory.query)
         self.sendCommand(*args)
@@ -83,6 +82,4 @@ class GopherClientFactory(Factory):
         self.withBanner = withBanner
 
     def buildProtocol(self, addr):
-        protocol = GopherClient(self.selector, self.debug)
-        protocol.factory = self
-        return protocol
+        return GopherClient(self)
