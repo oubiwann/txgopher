@@ -64,22 +64,21 @@ class GopherServiceMaker(object):
     tapname = "gopher"
     description = "A Twisted Gopher Server."
     options = GopherOptions
+    port = const.defaultPort
 
     def getEndpoint(self):
-        endpointString = "tcp:port=%s" % port
+        endpointString = "tcp:port=%s" % self.port
         return endpoints.serverFromString(reactor, endpointString)
 
     def makeService(self, options):
         """
         Construct a TCPServer from a factory defined in myproject.
         """
-        try:
+        if hasattr(options, "subOptions"):
             # if the "server" subcommand of the "gopher" command doesn't have
             # any parameters passed, then subOptions won't be defined, in which
             # case we'll need to fall back to the default
-            port = options.subOptions["port"]
-        except:
-            port = const.defaultPort
+            self.port = options.subOptions["port"]
         factory = server.GopherServerFactory()
         return internet.StreamServerEndpointService(
             self.getEndpoint(), factory)
