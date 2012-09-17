@@ -5,7 +5,6 @@ from twisted.protocols.basic import LineReceiver
 from txgopher import const, protocol
 
 
-
 class GopherClient(LineReceiver):
     """
     """
@@ -44,8 +43,10 @@ class GopherClient(LineReceiver):
     def disconnect(self):
         if self.factory.debug:
             print "Disconnecting client ..."
-        self.transport.loseConnection()
-        reactor.stop()
+        if self.transport.connected:
+            self.transport.loseConnection()
+        if reactor.running:
+            reactor.stop()
 
     def lineReceived(self, line):
         if line == const.DISCONNECT:
