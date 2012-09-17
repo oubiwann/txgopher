@@ -124,10 +124,16 @@ class GopherMapProtocol(object):
     def parseLine(self, line):
         if not line:
             return
+        types = GopherComprehensiveItemTypes()
         self.type = line[0]
-        self.typeName = GopherComprehensiveItemTypes().get(self.type)
+        self.typeName = types.get(self.type)
         if self.type == const.DISCONNECT:
             return
+        if not any([self.type.startswith(x) for x in const.ALL_ITEMS]):
+            self.display = line
+            return
+        # XXX this next line is going to get us in trouble ... need to do it a
+        # better way
         self.display, self.selector, self.itemhost, self.port = line[1:].split(
             const.fieldSeparator)
         self.url = "%s://%s/%s%s" % (
