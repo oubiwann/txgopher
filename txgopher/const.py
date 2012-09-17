@@ -3,6 +3,7 @@ hostPortSeparator = ":"
 selectorSeparator = "/"
 fieldSeparator = "\t"
 scheme = "gopher"
+# XXX need to change these to RemoteHost
 defaultHost = "sdf.lonestar.org"
 defaultPort = 70
 defaultURL = "%s://%s/" % (scheme, defaultHost)
