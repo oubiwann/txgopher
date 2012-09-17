@@ -15,11 +15,22 @@ TBD
 Running the Server
 ------------------
 
-There are two ways to run the server. You can use the "old-fashined" way, and
-call the ``.tac`` file::
+There are two ways to run the server. You can use the ``twistd`` plugin::
+
+  $ sudo twistd -n gopher
+
+
+Or you can do it the "old-fashioned" way, and use the ``.tac`` file::
 
   $ sudo twistd -ny ./bin/txGopherServer.tac
 
-Or you can use the ``twistd`` plugin::
+If you'd like to daemonize, simply leave off the ``-n``.
 
-  $ sudo twistd -n gopher
+If you would like to run the gopher server on a non-privileged port and not run
+as root, you can pass the port parameter::
+
+  $ twistd -n gopher server --port 1070
+
+Or::
+
+  $ twistd -ny ./bin/txGopherServer.tac gopher server --port 1070
