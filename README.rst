@@ -1,5 +1,5 @@
 ~~~~~~~~
-txgopher
+txGopher
 ~~~~~~~~
 
 An async (Twisted) implementation of gopher

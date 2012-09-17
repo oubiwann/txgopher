@@ -23,6 +23,14 @@ Featues
 
  * Create the server
 
+   - add support for serving a static directory
+
+   - add mimetypes <-> gopher type id support
+
    - support gophermap files and .cache files
 
-   - 
+   - add an "About this gopher server" menu item to every top-level page
+
+     . include the list of supported mimetypes
+
+     . include the list of supported gopher types
