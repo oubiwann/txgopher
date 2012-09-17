@@ -22,7 +22,7 @@ class ClientOptions(BaseOptions):
         ["url", "u", const.defaultURL, "a gopherspace URL"],
         ["host", "h", None, "a gopher host"],
         ["type", "t", const.DIR, "a gopher item type"],
-        ["selector", "s", None, "a gopher selector (path)"],
+        ["selector", "s", "/", "a gopher selector (path)"],
         ["query", "q", None, "a gopher search query"],
     ]
 
