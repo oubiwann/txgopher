@@ -55,3 +55,31 @@ class ClientService(object):
         d.addErrback(log.msg)
         d.addCallback(cls.gotProtocol)
         reactor.run()
+
+
+class GopherServiceMaker(object):
+    """
+    """
+    implements(service.IServiceMaker, plugin.IPlugin)
+    tapname = "gopher"
+    description = "A Twisted Gopher Server."
+    options = GopherOptions
+
+    def getEndpoint(self):
+        endpointString = "tcp:port=%s" % port
+        return endpoints.serverFromString(reactor, endpointString)
+
+    def makeService(self, options):
+        """
+        Construct a TCPServer from a factory defined in myproject.
+        """
+        try:
+            # if the "server" subcommand of the "gopher" command doesn't have
+            # any parameters passed, then subOptions won't be defined, in which
+            # case we'll need to fall back to the default
+            port = options.subOptions["port"]
+        except:
+            port = const.defaultPort
+        factory = server.GopherServerFactory()
+        return internet.StreamServerEndpointService(
+            self.getEndpoint(), factory)
