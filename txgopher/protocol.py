@@ -88,9 +88,12 @@ class GopherComprehensiveItemTypes(GopherPlusItemTypes):
     """
     map = GopherPlusItemTypes.map
     map.update({
+        "calendar": const.CAL,
         "disconnect": const.DISCONNECT,
+        "event": const.EVENT,
         "html": const.HTML,
-        "information": const.INFO,
+        "inline": const.INLINE,
+        "multipart": const.MIME,
         "sound": const.SOUND,
     })
 
@@ -136,7 +139,7 @@ class GopherMapProtocol(object):
             repr += ", data='%s'" % self.display
         if self.type == const.DIR:
             repr += " selector='%s'" % self.selector
-        if (self.type not in [const.DISCONNECT, const.INFO]
+        if (self.type not in [const.DISCONNECT, const.INLINE]
             and self.itemhost != self.host):
             repr += " host='%s'" % self.itemhost
         return repr + ">"
