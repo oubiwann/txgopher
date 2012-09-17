@@ -8,13 +8,10 @@ class GopherServer(protocol.Protocol):
         self.factory = factory
 
     def connectionMade(self):
-        self.factory.numProtocols = self.factory.numProtocols + 1
-        self.transport.write(
-            "Welcome! There are currently %d open connections.\n" %
-            (self.factory.numProtocols,))
+        self.transport.write("Welcome :-)")
 
     def connectionLost(self, reason):
-        self.factory.numProtocols = self.factory.numProtocols - 1
+        self.transport.write("Good-bye :-(")
 
     def dataReceived(self, data):
         self.transport.write(data)
@@ -24,4 +21,4 @@ class GopherServerFactory(protocol.Factory):
     """
     """
     def buildProtocol(self, addr):
-        return GopherServer()
+        return GopherServer(self)
