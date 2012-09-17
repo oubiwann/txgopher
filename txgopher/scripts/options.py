@@ -3,7 +3,7 @@ from twisted.python import usage
 from txgopher import const
 
 
-class ClientOptions(usage.Options):
+class BaseOptions(usage.Options):
     """
     """
     optFlags = [
@@ -11,10 +11,30 @@ class ClientOptions(usage.Options):
         ["no-banner", "b", "run without the banner"],
     ]
     optParameters = [
+        ["port", "p", const.defaultPort, "a gopher server's port"],
+    ]
+
+
+class ClientOptions(BaseOptions):
+    """
+    """
+    optParameters = [
         ["url", "u", const.defaultURL, "a gopherspace URL"],
         ["host", "h", None, "a gopher host"],
-        ["port", "p", const.defaultPort, "a gopher server's port"],
         ["type", "t", const.DIR, "a gopher item type"],
         ["selector", "s", None, "a gopher selector (path)"],
         ["query", "q", None, "a gopher search query"],
+    ]
+
+
+class ServerOptions(BaseOptions):
+    """
+    """
+
+
+class GopherOptions(usage.Options):
+    """
+    """
+    subCommands = [
+        ["server", None, ServerOptions, "configure the server"],
     ]
