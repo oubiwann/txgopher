@@ -1,57 +1,5 @@
 #!/usr/bin/env python2.7
-from twisted.internet import reactor
-from twisted.internet.endpoints import TCP4ClientEndpoint
-from twisted.python import log, usage
-
-from txgopher import client, const, utils
+from txgopher.scripts import services
 
 
-class ClientOptions(usage.Options):
-    """
-    """
-    optFlags = [
-        ["debug", "d", "run in debug mode"],
-        ["no-banner", "b", "run without the banner"],
-    ]
-    optParameters = [
-        ["url", "u", const.defaultURL, "a gopherspace URL"],
-        ["host", "h", None, "a gopher host"],
-        ["port", "p", const.defaultPort, "a gopher server's port"],
-        ["type", "t", const.DIR, "a gopher item type"],
-        ["selector", "s", None, "a gopher selector (path)"],
-        ["query", "q", None, "a gopher search query"],
-    ]
-
-
-def gotProtocol(protocol):
-    """
-    """
-    banner = protocol.getBanner()
-    if banner:
-        print banner
-
-
-def main():
-    options = ClientOptions()
-    options.parseOptions()
-    url = options["url"]
-    debug = bool(options["debug"])
-    withBanner = not bool(options["no-banner"])
-    if url:
-        type, selector, host, port, query = utils.getClientParams(url)
-    else:
-        type = options["type"]
-        selector = options["selector"]
-        host = options["host"]
-        port = options["port"]
-        query = options["query"]
-    endpoint = TCP4ClientEndpoint(reactor, host, port)
-    factory = client.GopherClientFactory(
-        host, type, selector, query, debug, withBanner)
-    d = endpoint.connect(factory)
-    d.addErrback(log.msg)
-    d.addCallback(gotProtocol)
-    reactor.run()
-
-
-main()
+services.ClientService.run()
