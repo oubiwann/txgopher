@@ -22,41 +22,62 @@ class GopherClient(LineReceiver):
         return "%s%s\n%s%s" % (
             separator, const.banner, additionalText, separator)
 
-    def sendCommand(self, selector=""):
+    def sendCommand(self, selector="", query=""):
         if not selector:
             selector = self.selector
-        self.sendLine(selector)
+        command = selector
+        if query:
+            command = "%s\t%s" % (command, query)
+        if self.factory.debug:
+            print "Sending command '%s' ..." % command
+        self.sendLine(command)
 
     def handleGopherMapLine(self, line):
         parsed = protocol.GopherMapProtocol(self.factory.host, line)
         if self.factory.debug:
             print parsed
         elif parsed.type in const.RESOURCES:
-            print "%s <link: %s>" % (parsed.display, parsed.url)
+            print "%s <link %s>" % (parsed.display, parsed.url)
         else:
             print parsed.display
 
+    def disconnect(self):
+        if self.factory.debug:
+            print "Disconnecting client ..."
+        self.transport.loseConnection()
+        reactor.stop()
+
     def lineReceived(self, line):
         if line == const.DISCONNECT:
-            self.transport.loseConnection()
-            reactor.stop()
-        elif self.factory.type == const.DIR:
+            self.disconnect()
+        elif self.factory.type in const.MENUS:
             self.handleGopherMapLine(line)
         elif self.factory.type in const.FILES:
             print line
 
-
     def connectionMade(self):
-        self.sendCommand()
+        if self.factory.debug:
+            print "Connection made to %s." % self.factory.host
+        args = [self.selector]
+        if self.factory.type == const.SEARCH:
+            args.append(self.factory.query)
+        self.sendCommand(*args)
+
+    def connectionLost(self, reason):
+        if self.factory.debug:
+            print "Connection lost: %s" % reason
+        self.disconnect()
 
 
 class GopherClientFactory(Factory):
     """
     """
-    def __init__(self, host, type, selector, debug=False, withBanner=True):
+    def __init__(self, host, type, selector, query="", debug=False,
+                 withBanner=True):
         self.host = host
         self.type = type
         self.selector = selector
+        self.query = query
         self.debug = debug
         self.withBanner = withBanner
 
