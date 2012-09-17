@@ -1,3 +1,4 @@
+from twisted.python import log
 from twisted.internet import protocol
 
 
@@ -8,13 +9,18 @@ class GopherServer(protocol.Protocol):
         self.factory = factory
 
     def connectionMade(self):
-        self.transport.write("Welcome :-)")
+        log.msg("Remote host %s:%s connected ..." % self.transport.client)
+        #import pdb;pdb.set_trace()
+        self.transport.write("Welcome :-)\n")
 
     def connectionLost(self, reason):
-        self.transport.write("Good-bye :-(")
+        log.msg("Remote host %s:%s disconnected." % self.transport.client)
+        self.transport.write("Good-bye :-(\n")
 
     def dataReceived(self, data):
-        self.transport.write(data)
+        params = self.transport.client + (str(data),)
+        log.msg("Data received from %s:%s: %s" % params)
+        self.transport.write("You asked for the following: %s" % str(data))
 
 
 class GopherServerFactory(protocol.Factory):
