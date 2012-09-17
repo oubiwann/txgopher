@@ -20,3 +20,9 @@ Featues
  * Serving JSON... the overhead on the gopher server is so low, it'd be ideal...
 
  * Read remote gopher files... get a file handle, read data, etc.
+
+ * Create the server
+
+   - support gophermap files and .cache files
+
+   - 
