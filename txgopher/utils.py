@@ -1,14 +1,16 @@
-from urlparse import urlparse
+import urlparse
+import urllib2
 
 from txgopher import const
 
 
 def getClientParams(url=""):
-    result = urlparse(url)
+    result = urlparse.urlparse(url)
     scheme = result.scheme
     host = const.defaultHost
     port = const.defaultPort
     item = const.defaultItem
+    query = ""
     hostAndPort = [
         x for x in result.netloc.split(const.hostPortSeparator) if x]
     if len(hostAndPort) == 1:
@@ -24,5 +26,7 @@ def getClientParams(url=""):
         if firstElement in const.ALL_ITEMS:
             parts.pop(0)
             item = firstElement
+            if item == const.SEARCH:
+                query = urllib2.unquote(result.query)
     selector = "/" + const.selectorSeparator.join(parts)
-    return (item, selector, host, port)
+    return (item, selector, host, port, query)
