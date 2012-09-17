@@ -1,9 +1,12 @@
-from twisted.internet import reactor
-from twisted.internet.endpoints import TCP4ClientEndpoint
+from zope.interface import implements
+
+from twisted import plugin
+from twisted.application import internet, service
+from twisted.internet import endpoints, reactor
 from twisted.python import log, usage
 
-from txgopher import client, const, utils
-from txgopher.scripts import options
+from txgopher import client, const, server, utils
+from txgopher.scripts.options import ClientOptions, GopherOptions
 
 
 class ClientService(object):
@@ -19,7 +22,7 @@ class ClientService(object):
 
     @classmethod
     def parseOptions(cls):
-        opts = options.ClientOptions()
+        opts = ClientOptions()
         opts.parseOptions()
         url = opts["url"]
         cls.debug = bool(opts["debug"])
@@ -35,13 +38,20 @@ class ClientService(object):
             cls.query = opts["query"]
 
     @classmethod
-    def run(cls):
-        cls.parseOptions()
-        endpoint = TCP4ClientEndpoint(reactor, cls.host, cls.port)
-        factory = client.GopherClientFactory(
+    def getEndpoint(cls):
+        endpointString = "tcp:host=%s:port=%s" % (cls.host, cls.port)
+        return endpoints.clientFromString(reactor, endpointString)
+
+    @classmethod
+    def getFactory(cls):
+        return client.GopherClientFactory(
             cls.host, cls.type, cls.selector, cls.query, cls.debug,
             cls.withBanner)
-        d = endpoint.connect(factory)
+
+    @classmethod
+    def run(cls):
+        cls.parseOptions()
+        d = cls.getEndpoint().connect(cls.getFactory())
         d.addErrback(log.msg)
         d.addCallback(cls.gotProtocol)
         reactor.run()
