@@ -25,17 +25,18 @@ class ClientService(object):
         opts = ClientOptions()
         opts.parseOptions()
         url = opts["url"]
+        host = opts["host"]
         cls.debug = bool(opts["debug"])
         cls.withBanner = not bool(opts["no-banner"])
-        if url:
-            cls.type, cls.selector, cls.host, cls.port, cls.query = (
-                utils.getClientParams(url))
-        else:
+        if host:
             cls.type = opts["type"]
             cls.selector = opts["selector"]
             cls.host = opts["host"]
             cls.port = opts["port"]
             cls.query = opts["query"]
+        else:
+            cls.type, cls.selector, cls.host, cls.port, cls.query = (
+                utils.getClientParams(url))
 
     @classmethod
     def getEndpoint(cls):
