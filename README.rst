@@ -2,6 +2,8 @@
 txGopher
 ~~~~~~~~
 
+.. image:: resources/gopher-small.png
+
 An async (Twisted) implementation of gopher
 
 Usage
